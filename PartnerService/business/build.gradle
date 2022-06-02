@@ -1,0 +1,28 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+dependencies {
+    api platform('org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR7')
+
+    implementation project(':client')
+
+    implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
+    implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.23.1'
+}
+
+test {
+    useJUnitPlatform()
+}

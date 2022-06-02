@@ -1,0 +1,71 @@
+plugins {
+    id 'maven-publish'
+    id "org.openapi.generator" version "5.3.0"
+}
+
+dependencies {
+    compileOnly 'javax.validation:validation-api:2.0.1.Final'
+    compileOnly 'io.swagger:swagger-annotations:1.6.6'
+    compileOnly 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+    compileOnly 'org.springframework:spring-web:5.3.20'
+    compileOnly 'org.springframework:spring-context:5.3.20'
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+    compileOnly 'javax.annotation:javax.annotation-api:1.3.2'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    implementation group: 'org.openapitools', name: 'jackson-databind-nullable', version: '0.2.0'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+}
+
+def openApiSpecFile = "$projectDir/src/main/resources/PartnerAPI.yml"
+def openApiOutputDir = "$buildDir/generated"
+openApiGenerate {
+    generatorName = "spring"
+    skipValidateSpec = true
+    inputSpec = openApiSpecFile.toString()
+    outputDir = openApiOutputDir.toString()
+    apiPackage = "hu.matray.partner.springbootserverapi"
+    modelPackage = "hu.matray.partner.springbootserverapi.model"
+    configOptions = [
+            library                         : "spring-mvc",
+            dateLibrary                     : "java8",
+            java8                           : "true",
+            delegatePattern                 : "true",
+            interfaceOnly                   : "true",
+            useBeanValidation               : "true",
+            implicitHeaders                 : "true",
+            "additionalModelTypeAnnotations": ";@lombok.Builder;@lombok.NoArgsConstructor;@lombok.AllArgsConstructor"
+    ]
+}
+
+task removeUnnecessaryOpenAPIGeneratedFiles {
+    mustRunAfter tasks.openApiGenerate
+
+    doLast {
+        delete fileTree(dir: "$buildDir/generated", exclude: 'src')
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["$buildDir/generated/src/main/java"]
+        }
+    }
+}
+
+compileJava {
+    tasks.openApiGenerate.inputs.files(openApiSpecFile)
+    tasks.openApiGenerate.outputs.dir("${openApiOutputDir}/src")
+
+    //noinspection GroovyAssignabilityCheck
+    dependsOn tasks.openApiGenerate
+    dependsOn tasks.removeUnnecessaryOpenAPIGeneratedFiles
+}
+
+publishing{
+    publications {
+        partnerClient(MavenPublication) {
+            from project.components.java
+        }
+    }
+}

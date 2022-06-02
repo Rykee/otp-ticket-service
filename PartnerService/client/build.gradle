@@ -1,0 +1,33 @@
+plugins {
+    id 'maven-publish'
+    id 'idea'
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
+}
+
+dependencies {
+    api platform('org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR7')
+
+    api project(':api')
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
+    compileOnly group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+    implementation group: 'io.github.openfeign', name: 'feign-jaxrs'
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+publishing{
+    publications {
+        partnerClient(MavenPublication) {
+            from project.components.java
+        }
+    }
+}

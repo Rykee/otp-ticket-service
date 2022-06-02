@@ -1,0 +1,42 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+	id 'org.springframework.boot' version '2.2.5.RELEASE'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+}
+
+dependencies {
+	api platform(SpringBootPlugin.BOM_COORDINATES)
+	implementation platform('org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR7')
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+	implementation group: 'org.springframework', name: 'spring-context-support'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.modelmapper:modelmapper:3.1.0'
+	implementation 'hu.matray.partner:client:1.0.0-SNAPSHOT'
+	implementation 'org.zalando:logbook-spring-boot-starter:2.14.0'
+	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
+	implementation project(':api')
+
+	runtimeOnly 'com.oracle.ojdbc:ojdbc8'
+
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

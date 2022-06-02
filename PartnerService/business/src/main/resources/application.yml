@@ -1,0 +1,5 @@
+server.port: 9111
+
+application:
+  getEventsJsonPath: /staticResponses/getEvents.json
+  getEventJsonPathPattern: /staticResponses/getEvent{id}.json

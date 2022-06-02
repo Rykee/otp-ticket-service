@@ -1,0 +1,16 @@
+server.port: 8080
+
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/xe
+    username: OTP_TICKET
+    password: changeme
+    driver-class-name: oracle.jdbc.OracleDriver
+
+application:
+  partnerFeignClient: #Partner szolgáltatás elérése
+    url: http://localhost:9111
+    username: ticketUser
+    password: ticketPassword
+
+logging.level.org.zalando.logbook: TRACE

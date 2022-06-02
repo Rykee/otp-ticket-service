@@ -1,0 +1,5 @@
+rootProject.name = 'PartnerService'
+include 'api'
+include 'business'
+include 'client'
+

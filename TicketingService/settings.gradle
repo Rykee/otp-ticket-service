@@ -1,0 +1,6 @@
+rootProject.name = 'TicketingService'
+include 'api'
+include 'core'
+include 'database'
+include 'ticket'
+

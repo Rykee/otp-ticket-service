@@ -1,0 +1,186 @@
+openapi: 3.0.0
+servers: [ ]
+info:
+  description: Ticketing system API
+  version: "1.0.0"
+  title: Ticketing
+  contact:
+    email: matray.mark@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: events
+    description: Calls related to events
+  - name: reserve
+    description: Endpoints related to seat reservation
+paths:
+  /getEvents:
+    get:
+      tags:
+        - events
+      summary: Returns a list of events
+      operationId: getEvents
+      responses:
+        '200':
+          description: Call returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventListResponse'
+        '400':
+          description: bad input parameter
+  /getEvent:
+    get:
+      tags:
+        - events
+      summary: Returns an event
+      operationId: getEvent
+      parameters:
+        - in: query
+          name: EventId
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        '200':
+          description: Call returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDetailResponse'
+        '400':
+          description: bad input parameter
+
+  /reserve:
+    post:
+      tags:
+        - reserve
+      summary: Returns an event
+      operationId: reserve
+      parameters:
+        - in: query
+          name: EventId
+          schema:
+            type: integer
+            format: int64
+          required: true
+        - in: query
+          name: SeatId
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        '200':
+          description: Call returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '400':
+          description: bad input parameter
+
+components:
+  schemas:
+    EventListResponse:
+      type: object
+      required:
+        - data
+        - success
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        success:
+          type: boolean
+          example: true
+
+    EventDetailResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          $ref: '#/components/schemas/EventDetail'
+
+    EventDetail:
+      type: object
+      required:
+        - eventId
+        - seats
+      properties:
+        eventId:
+          type: integer
+          format: int64
+          example: 1
+        seats:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeatInfo'
+
+    Event:
+      type: object
+      required:
+        - eventId
+        - title
+        - location
+        - startTimeStamp
+        - endTimeStamp
+      properties:
+        eventId:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: Szilveszteri zártkörű rendezvény
+        location:
+          type: string
+          example: Greenwich
+        startTimeStamp:
+          type: string
+          example: "1577836800"
+        endTimeStamp:
+          type: string
+          example: "1577836800"
+
+    SeatInfo:
+      type: object
+      required:
+        - id
+        - price
+        - currency
+        - reserved
+      properties:
+        id:
+          type: string
+          example: S1
+        price:
+          type: integer
+          example: 1000
+        currency:
+          type: string
+          example: HUF
+        reserved:
+          type: boolean
+          example: true
+
+    ReservationResponse:
+      type: object
+      required:
+        - success
+      properties:
+        reserver:
+          type: integer
+          format: int64
+          example: 234175676
+        success:
+          type: boolean
+          example: true
+        errorCode:
+          type: integer
+          example: 90002
